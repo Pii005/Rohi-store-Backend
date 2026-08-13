@@ -15,7 +15,6 @@ const obtenerProductos = async (filtros = {}) => {
     }
 
     if (nombre) {
-        // busqueda parcial, insensible a mayusculas
         query.nombre = { $regex: nombre, $options: "i" };
     }
 
@@ -25,12 +24,16 @@ const obtenerProductos = async (filtros = {}) => {
         if (precioMax) query.precio.$lte = Number(precioMax);
     }
 
-    let ordenamiento = {};
-    if (orden === "precio_asc") ordenamiento.precio = 1;
-    if (orden === "precio_desc") ordenamiento.precio = -1;
-    if (orden === "reciente") ordenamiento.createdAt = -1;
+    const productos = await Product.find(query).sort(
+        orden === "precio_asc"
+            ? { precio: 1 }
+            : orden === "precio_desc"
+                ? { precio: -1 }
+                : orden === "reciente"
+                    ? { createdAt: -1 }
+                    : {}
+    );
 
-    const productos = await Product.find(query).sort(ordenamiento);
     return productos;
 };
 
@@ -78,4 +81,3 @@ module.exports = {
     actualizarProducto,
     eliminarProducto,
 };
-

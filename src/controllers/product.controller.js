@@ -2,6 +2,8 @@ const {
     crearProducto,
     obtenerProductos,
     obtenerProductoPorId,
+    actualizarProducto,
+    eliminarProducto,
 } = require("../services/product.service");
 
 const create = async (req, res, next) => {
@@ -31,7 +33,7 @@ const getAll = async (req, res, next) => {
     try {
         // filtros vienen por query params: /api/products?categoria=ropa&precioMin=100
         const productos = await obtenerProductos(req.query);
-
+        // console.log("PRODUCTOS ENCONTRADOS:", productos);
         res.status(200).json(productos);
     } catch (error) {
         next(error);
